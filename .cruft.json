@@ -1,0 +1,31 @@
+{
+  "template": "https://github.com/arnesor/uv-template.git",
+  "commit": "46beff590594883c01f441b79f4c388f342c0a95",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "timeseriestest",
+      "package_name": "timeseriestest",
+      "friendly_name": "TimeseriesTest",
+      "copyright_owner": "Arne Sørli",
+      "copyright_year": "2026",
+      "author": "Arne Sørli",
+      "email": "81353974+arneso-ssb@users.noreply.github.com",
+      "github_organization": "arneso-ssb",
+      "version": "0.0.0",
+      "license": "MIT",
+      "development_status": "Development Status :: 4 - Beta",
+      "code_quality_level": "Medium",
+      "_copy_without_render": [
+        "*.rst_t"
+      ],
+      "_jinja2_env_vars": {
+        "lstrip_blocks": true,
+        "trim_blocks": true
+      },
+      "_template": "https://github.com/arnesor/uv-template.git",
+      "_commit": "46beff590594883c01f441b79f4c388f342c0a95"
+    }
+  },
+  "directory": null
+}
