@@ -1,12 +1,8 @@
 # TimeseriesTest
 
-[![PyPI](https://img.shields.io/pypi/v/timeseriestest.svg)][pypi status]
-[![Status](https://img.shields.io/pypi/status/timeseriestest.svg)][pypi status]
-[![Python Version](https://img.shields.io/pypi/pyversions/timeseriestest)][pypi status]
 [![License](https://img.shields.io/pypi/l/timeseriestest)][license]
 
 [![Tests](https://github.com/arneso-ssb/timeseriestest/actions/workflows/tests.yml/badge.svg)][tests]
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=arneso-ssb_timeseriestest&metric=coverage)][sonarcov]
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=arneso-ssb_timeseriestest&metric=alert_status)][sonarquality]
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
@@ -19,21 +15,7 @@
 [sonarquality]: https://sonarcloud.io/summary/overall?id=arneso-ssb_timeseriestest
 [pre-commit]: https://github.com/pre-commit/pre-commit
 
-## Features
-
-- TODO
-
-## Requirements
-
-- TODO
-
-## Installation
-
-You can install _TimeseriesTest_ via [pip] or [uv] from [PyPI]:
-
-```console
-uv add timeseriestest
-```
+Test of the ssb-timeseries library.
 
 ## Usage
 
