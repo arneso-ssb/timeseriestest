@@ -121,6 +121,7 @@ ignore = [
     "E402",   # Supress module-import-not-at-top-of-file, needed in jupyter notebooks.
     "E501",   # Supress line-too-long warnings: trust ruff's judgement on this one.
     "PLR2004", # Allow to compare with unnamed numerical constants.
+    "B018", # Allow marimo and jupyter print outs.
 
     # Disable rules conflicting with ruff as a formatter,
     # see https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
