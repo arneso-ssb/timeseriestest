@@ -16,11 +16,22 @@ def _(mo):
 def _():
     from pathlib import Path
 
+    import altair as alt
+    import marimo as mo
+    import matplotlib.pyplot as plt
     import pandas as pd
     from ssb_timeseries.dataset import Dataset
     from ssb_timeseries.types import SeriesType
 
-    return Dataset, Path, SeriesType, pd
+    return Dataset, Path, SeriesType, alt, mo, pd, plt
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Read dataset
+    """)
+    return
 
 
 @app.cell
@@ -29,6 +40,14 @@ def _(Path, pd):
     data = pd.read_csv(Path("kpi.csv"), parse_dates=["valid_at"])
     data
     return (data,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Create timeseries dataset
+    """)
+    return
 
 
 @app.cell
@@ -64,6 +83,14 @@ def _(cpi):
     return (selected,)
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Calculations
+    """)
+    return
+
+
 @app.cell
 def _(selected):
     # Calculate deiffrence from reference for all series
@@ -77,6 +104,148 @@ def _(selected):
     # Calculate moving average
     moving_average = selected.moving_average(start=-2, stop=0)
     moving_average.pd
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Plotting
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Built-in
+    """)
+    return
+
+
+@app.cell
+def _(plt, selected):
+    ax = selected.plot(marker="o")
+
+    ax.set_title("Konsumprisindeksen etter vare- og tjenestegruppe")
+    ax.set_xlabel("")
+    ax.set_ylabel("Indeks (2025 = 100)")
+    ax.grid(axis="y", alpha=0.3)
+
+    plt.tight_layout()
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Using Altair
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Select which groups you want to plot:
+    """)
+    return
+
+
+@app.cell
+def _(cpi, mo):
+    series_picker = mo.ui.multiselect(
+        options=cpi.series,
+        value=[
+            "00 I alt",
+            "01 Matvarer og alkoholfrie drikkevarer",
+            "04 Bolig, elektrisitet og brensel",
+        ],
+        label="Vare- og tjenestegrupper",
+        max_selections=5,
+    )
+
+    series_picker
+    return (series_picker,)
+
+
+@app.cell
+def _(cpi, series_picker):
+    # Make the data suitable for plotting with Altair
+    plot_data = cpi.pd.melt(
+        id_vars="valid_at",
+        value_vars=series_picker.value,
+        var_name="varegruppe",
+        value_name="indeks",
+    )
+    return (plot_data,)
+
+
+@app.cell
+def _(alt, plot_data):
+    cpi_chart = (
+        alt.Chart(plot_data)
+        .mark_line(
+            point=True,
+            strokeWidth=2.5,
+        )
+        .encode(
+            x=alt.X(
+                "valid_at:T",
+                title=None,
+                axis=alt.Axis(
+                    format="%b %Y",
+                    labelAngle=-45,
+                    grid=False,
+                ),
+            ),
+            y=alt.Y(
+                "indeks:Q",
+                title="Indeks (2025 = 100)",
+                scale=alt.Scale(zero=False),
+            ),
+            color=alt.Color(
+                "varegruppe:N",
+                title=None,
+                legend=alt.Legend(
+                    orient="bottom",
+                    columns=1,
+                    labelLimit=600,
+                ),
+            ),
+            tooltip=[
+                alt.Tooltip(
+                    "valid_at:T",
+                    title="Måned",
+                    format="%Y-%m",
+                ),
+                alt.Tooltip(
+                    "varegruppe:N",
+                    title="Vare- og tjenestegruppe",
+                ),
+                alt.Tooltip(
+                    "indeks:Q",
+                    title="KPI",
+                    format=".1f",
+                ),
+            ],
+        )
+        .properties(
+            title="Konsumprisindeksen etter vare- og tjenestegruppe",
+            width="container",
+            height=420,
+        )
+        .configure_axis(
+            gridColor="#e5e7eb",
+            gridOpacity=0.1,
+            labelFontSize=12,
+            titleFontSize=13,
+        )
+        .configure_view(strokeWidth=0)
+    )
+
+    cpi_chart
     return
 
 
