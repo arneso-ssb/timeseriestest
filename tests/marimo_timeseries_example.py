@@ -42,6 +42,17 @@ def _(Path, pd):
     return (data,)
 
 
+@app.cell
+def _(pd):
+    def round_floats(df: pd.DataFrame, decimals: int = 1) -> pd.DataFrame:
+        """Return a dataframe with float values formatted to the specified number of decimals."""
+        float_columns = df.select_dtypes(include="float").columns
+
+        return df.round({column: decimals for column in float_columns})
+
+    return (round_floats,)
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -92,18 +103,18 @@ def _(mo):
 
 
 @app.cell
-def _(selected):
+def _(round_floats, selected):
     # Calculate deiffrence from reference for all series
     difference_from_reference = selected - 100
-    difference_from_reference.pd
+    round_floats(difference_from_reference.pd)
     return
 
 
 @app.cell
-def _(selected):
+def _(round_floats, selected):
     # Calculate moving average
     moving_average = selected.moving_average(start=-2, stop=0)
-    moving_average.pd
+    round_floats(moving_average.pd)
     return
 
 
@@ -249,8 +260,33 @@ def _(alt, plot_data):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Changes from last period and last year
+    """)
+    return
+
+
 @app.cell
-def _():
+def _(cpi, round_floats):
+    monthly_percentage_change = (
+        cpi.pd.set_index(
+            "valid_at"
+        )  # Removes the date column from the change calculation
+        .pct_change()
+        .mul(100)
+    )
+    round_floats(monthly_percentage_change.tail(1))
+    return
+
+
+@app.cell
+def _(cpi, round_floats):
+    yearly_percentage_change = (
+        cpi.pd.set_index("valid_at").pct_change(periods=12).mul(100)
+    )
+    round_floats(yearly_percentage_change.tail(1))
     return
 
 
