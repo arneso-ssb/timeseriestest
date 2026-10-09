@@ -21,7 +21,8 @@
 
 ## Features
 
-- TODO
+- Transfer Parquet data through portable CSV and JSON text files.
+- Preserve Arrow datatypes, nullability, field metadata, and schema metadata.
 
 ## Requirements
 
@@ -37,7 +38,35 @@ uv add timeseriestest
 
 ## Usage
 
-Please see the [Contributor Guide] for details on running development tasks.
+Export a Parquet file into a transfer directory:
+
+```python
+from pathlib import Path
+
+from timeseriestest import parquet_to_text
+
+parquet_to_text(Path("input/measurements.parquet"), Path("transfer"))
+```
+
+This creates `transfer/data.csv` and `transfer/metadata.json`. The JSON file
+contains a readable schema and the exact serialized Arrow schema used for
+reconstruction.
+
+Recreate the Parquet file in another directory:
+
+```python
+from pathlib import Path
+
+from timeseriestest import text_to_parquet
+
+text_to_parquet(Path("transfer"), Path("output"))
+```
+
+The original filename is restored. Scalar Arrow types, including numeric,
+decimal, temporal, binary, string, and dictionary/categorical types, are
+preserved. Nested types such as lists and structs are not supported by the CSV
+intermediate format. Parquet-specific physical details such as compression,
+encoding, and row-group layout are recreated with PyArrow defaults.
 
 ## Contributing
 
