@@ -15,8 +15,9 @@
 
 ## Features
 
+- Examples and functions using the `ssb-timerseries` library.
 - Transfer Parquet data through portable CSV and JSON text files.
-- Preserve Arrow datatypes, nullability, field metadata, and schema metadata.
+  - Preserve Arrow datatypes, nullability, field metadata, and schema metadata.
 
 ## Requirements
 
@@ -31,6 +32,22 @@ uv add timeseriestest
 ```
 
 ## Usage
+
+### Config for ssb-timeseries
+
+Linux:
+
+```bash
+export TIMESERIES_CONFIG=/home/onyxia/work/timeseriestest/config/local-config.json
+```
+
+Windows, Powershell:
+
+```powershell
+$env:TIMESERIES_CONFIG = "C:\path\to\timeseriestest\config\local-config.json"
+```
+
+### Parquet
 
 Export a Parquet file into a transfer directory:
 

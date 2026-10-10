@@ -121,6 +121,10 @@ def main() -> None:
     print(f"Number of series: {len(mikrokv_dataset.series)}")
     print(series_tags[mikrokv_dataset.series[0]])
 
+    mikrokv_dataset.save()
+    mikrokv_dataset.snapshot()
+    print("Dataset saved and snapshot created.")
+
 
 if __name__ == "__main__":
     # root_logger = StatLogger()
