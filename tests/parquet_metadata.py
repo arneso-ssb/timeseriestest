@@ -1,8 +1,9 @@
 from pathlib import Path
+from typing import cast
 
 import pandas as pd
 from ssb_timeseries.dataset import Dataset
-from ssb_timeseries.types import SeriesType
+from ssb_timeseries.types import SeriesType, TagDict
 
 # from fagfunksjoner.log.statlogger import StatLogger
 # from timeseriestest.functions import text_to_parquet
@@ -104,15 +105,13 @@ def main() -> None:
         target_dataset=mikrokv_dataset,
     )
 
+    # Remove this cast when https://github.com/statisticsnorway/ssb-timeseries/issues/267 is fixed.
+    series_tags = cast(dict[str, TagDict], mikrokv_dataset.series_tags)
     rente_series = [
-        name
-        for name, tags in mikrokv_dataset.series_tags.items()
-        if tags["variable"] == "rente"
+        name for name, tags in series_tags.items() if tags["variable"] == "rente"
     ]
     belop_series = [
-        name
-        for name, tags in mikrokv_dataset.series_tags.items()
-        if tags["variable"] == "belop_50"
+        name for name, tags in series_tags.items() if tags["variable"] == "belop_50"
     ]
     mikrokv_dataset.tag_series(rente_series, tags={"unit": "percent"})
     mikrokv_dataset.tag_series(belop_series, tags={"unit": "NOK"})
@@ -120,7 +119,7 @@ def main() -> None:
     # print(mikrokv_dataset)
     print(mikrokv_dataset.data[["valid_at"]].head())
     print(f"Number of series: {len(mikrokv_dataset.series)}")
-    print(mikrokv_dataset.series_tags[mikrokv_dataset.series[0]])
+    print(series_tags[mikrokv_dataset.series[0]])
 
 
 if __name__ == "__main__":

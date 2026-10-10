@@ -58,6 +58,9 @@ pretty = true
 show_column_numbers = true
 show_error_context = true
 
+[tool.deptry]
+known_first_party = ["timeseriestest"]
+
 [tool.rumdl]
 flavor = "gfm"
 line-length = 100
