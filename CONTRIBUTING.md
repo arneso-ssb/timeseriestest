@@ -1,8 +1,8 @@
 # Contributor Guide
 
 Thank you for your interest in improving this project.
-This project is open-source under the [MIT license] and
-welcomes contributions in the form of bug reports, feature requests, and pull requests.
+This project is open-source under the [MIT license]
+and welcomes contributions in the form of bug reports, feature requests, and pull requests.
 
 Here is a list of important resources for contributors:
 
@@ -22,8 +22,7 @@ When filing an issue, make sure to answer these questions:
 - What did you expect to see?
 - What did you see instead?
 
-The best way to get your bug fixed is to provide a test case,
-and/or steps to reproduce the issue.
+The best way to get your bug fixed is to provide a test case, and/or steps to reproduce the issue.
 
 ## How to request a feature
 
@@ -33,11 +32,12 @@ Request features on the [Issue Tracker].
 
 You need Python 3.12+ and [uv]:
 
-1. Install [uv] if you haven't already. Refer to the [uv installation guide](https://docs.astral.sh/uv/getting-started/installation/).
+1. Install [uv] if you haven't already.
+   Refer to the [uv installation guide](https://docs.astral.sh/uv/getting-started/installation/).
 2. Synchronize the development virtual environment and dependencies:
 
    ```console
-   uv sync --all-extras
+   uv sync
    ```
 
 3. Install the pre-commit hooks:
@@ -59,10 +59,13 @@ We run several types of checks on the codebase.
 
 ### Run Unit Tests
 
-Unit tests are located in the `tests/` directory and are written using the [pytest] testing framework. Run them with coverage:
+Unit tests are located in the `tests/` directory
+and are written using the [pytest] testing framework.
+Run them with coverage:
 
 ```console
-uv run pytest
+uv run coverage run -m pytest
+uv run coverage report
 ```
 
 ### Run Type Checking
@@ -75,9 +78,10 @@ uv run mypy src tests
 
 ### Run Linting & Formatting
 
-Check for lint errors and formatting using [ruff]:
+Check for lint errors and formatting using [rumdl] and [ruff]:
 
 ```console
+uv run rumdl check .
 uv run ruff check
 uv run ruff format --check
 ```
@@ -85,6 +89,7 @@ uv run ruff format --check
 To automatically format the code and fix auto-fixable lint issues:
 
 ```console
+uv run rumdl check --fix .
 uv run ruff check --fix
 uv run ruff format
 ```
@@ -97,13 +102,20 @@ Run doctests using [xdoctest]:
 uv run python -m xdoctest --modname=timeseriestest --command=all
 ```
 
-### Run Runtime Typeguard Checks
+### Run Dependency Checks
 
-Check type compliance at runtime:
+Check that declared and imported dependencies agree:
 
 ```console
-uv run pytest --typeguard-packages=timeseriestest
+uv run deptry .
 ```
+
+## How to release a new version
+
+Update `project.version` in `pyproject.toml` using semantic versioning
+and merge the change into `main` or `master`.
+After all CI checks pass, Release Drafter publishes a GitHub release tagged with the new version.
+GitHub releases contain source archives only.
 
 ## How to submit changes
 
@@ -112,7 +124,7 @@ Open a [pull request] to submit changes to this project.
 Your pull request needs to meet the following guidelines for acceptance:
 
 - The test suite must pass without errors and warnings.
-- Include unit tests. This project maintains 100% code coverage.
+- Include unit tests and maintain the configured coverage threshold.
 
 Feel free to submit early, though—we can always iterate on this.
 
@@ -126,6 +138,7 @@ This will allow a chance to talk it over with the owners and validate your appro
 [pytest]: https://pytest.org/
 [mypy]: https://mypy.org/
 [ruff]: https://github.com/astral-sh/ruff
+[rumdl]: https://github.com/rvben/rumdl
 [xdoctest]: https://github.com/Erotemic/xdoctest
 [pull request]: https://github.com/arneso-ssb/timeseriestest/pulls
 

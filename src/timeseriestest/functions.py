@@ -11,6 +11,7 @@ import pyarrow as pa
 import pyarrow.csv as csv
 import pyarrow.parquet as pq
 from ssb_timeseries.dataset import Dataset
+from ssb_timeseries.types import TagDict
 
 DATA_FILENAME = "data.csv"
 METADATA_FILENAME = "metadata.json"
@@ -74,7 +75,9 @@ def add_metadata_mapping(
     }
 
     series_by_key: dict[str, list[str]] = defaultdict(list)
-    for series_name, tags in target_dataset.series_tags.items():
+    # Remove this cast when https://github.com/statisticsnorway/ssb-timeseries/issues/267 is fixed.
+    series_tags = cast(dict[str, TagDict], target_dataset.series_tags)
+    for series_name, tags in series_tags.items():
         if from_col not in tags:
             raise KeyError(f"Series {series_name!r} has no {from_col!r} tag")
         series_by_key[str(tags[from_col])].append(series_name)

@@ -160,8 +160,8 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
-# PyPI configuration file
-.pypirc
+# rumdl
+.rumdl_cache/
 
 # Marimo
 marimo/_static/

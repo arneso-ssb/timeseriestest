@@ -1,5 +1,5 @@
 {
-  "_commit": "46beff590594883c01f441b79f4c388f342c0a95",
+  "_commit": "9c12e1f67eb29990774c7e8f55a18315a8047ca1",
   "_copy_without_render": [
     "*.rst_t"
   ],
@@ -12,12 +12,12 @@
   "code_quality_level": "Medium",
   "copyright_owner": "Arne Sørli",
   "copyright_year": "2026",
-  "development_status": "Development Status :: 4 - Beta",
   "email": "81353974+arneso-ssb@users.noreply.github.com",
   "friendly_name": "TimeseriesTest",
   "github_organization": "arneso-ssb",
   "license": "MIT",
   "package_name": "timeseriestest",
   "project_name": "timeseriestest",
+  "script_support": "project-local",
   "version": "0.0.0"
 }
