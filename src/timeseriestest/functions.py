@@ -63,8 +63,7 @@ def add_metadata_mapping(
     if conflicting.any():
         conflicting_keys = sorted(mapping_rows.loc[conflicting, from_col].astype(str))
         raise ValueError(
-            f"Values in {from_col!r} map to conflicting metadata: "
-            f"{conflicting_keys}"
+            f"Values in {from_col!r} map to conflicting metadata: {conflicting_keys}"
         )
 
     metadata_by_key = {
@@ -132,12 +131,13 @@ def text_to_parquet(text_directory: Path, output_directory: Path) -> Path:
 
     Returns:
         The path of the recreated Parquet file.
+
+    Raises:
+        ValueError: If the manifest version or Parquet filename is invalid.
     """
     manifest = cast(
         _Manifest,
-        json.loads(
-            (text_directory / METADATA_FILENAME).read_text(encoding="utf-8")
-        ),
+        json.loads((text_directory / METADATA_FILENAME).read_text(encoding="utf-8")),
     )
     if manifest["format_version"] != 1:
         msg = "Unsupported text transfer format version"
