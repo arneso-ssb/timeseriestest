@@ -175,3 +175,6 @@ __marimo__/
 /docs/_build/
 *.rej
 *.orig
+
+# ssb-timeseries
+timeseries/

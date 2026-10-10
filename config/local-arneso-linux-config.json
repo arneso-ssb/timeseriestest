@@ -1,0 +1,80 @@
+{
+  "configuration_file": "/home/arneso/git/timeseriestest/config/local-arneso-linux-config.json",
+  "io_handlers": {
+    "simple-parquet": {
+      "handler": "ssb_timeseries.io.pyarrow_simple.FileSystem",
+      "options": {}
+    },
+    "hive-partitioned-parquet": {
+      "handler": "ssb_timeseries.io.pyarrow_hive.HiveFileSystem",
+      "options": {}
+    },
+    "json": {
+      "handler": "ssb_timeseries.io.json_metadata.JsonMetaIO",
+      "options": {}
+    },
+    "snapshots": {
+      "handler": "ssb_timeseries.io.snapshot.FileSystem",
+      "options": {}
+    }
+  },
+  "repositories": {
+    "timeseriestest": {
+      "directory": {
+        "handler": "simple-parquet",
+        "options": {
+          "path": "/home/arneso/git/timeseriestest/timeseries"
+        }
+      },
+      "catalog": {
+        "handler": "json",
+        "options": {
+          "path": "/home/arneso/git/timeseriestest/timeseries/metadata"
+        }
+      }
+    }
+  },
+  "snapshots": {
+    "default": {
+      "directory": {
+        "handler": "snapshots",
+        "options": {
+          "path": "/home/arneso/git/timeseriestest/timeseries/archives"
+        }
+      }
+    }
+  },
+  "archives": {
+    "default": {
+      "directory": {
+        "handler": "archive",
+        "options": {
+          "path": "/home/arneso/git/timeseriestest/timeseries/archives"
+        }
+      },
+      "options": {
+        "archive_format": "ssb"
+      }
+    }
+  },
+  "logging": {
+    "version": 1,
+    "disable_existing_loggers": false,
+    "handlers": {
+      "console": {
+        "class": "logging.StreamHandler",
+        "stream": "ext://sys.stdout",
+        "level": "INFO"
+      }
+    },
+    "loggers": {
+      "ssb_timeseries": {
+        "level": "INFO",
+        "handlers": [
+          "console"
+        ],
+        "propagate": false
+      }
+    }
+  }
+}
