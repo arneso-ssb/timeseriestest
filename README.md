@@ -1,10 +1,5 @@
 # TimeseriesTest
 
-[![PyPI](https://img.shields.io/pypi/v/timeseriestest.svg)][pypi status]
-[![Status](https://img.shields.io/pypi/status/timeseriestest.svg)][pypi status]
-[![Python Version](https://img.shields.io/pypi/pyversions/timeseriestest)][pypi status]
-[![License](https://img.shields.io/pypi/l/timeseriestest)][license]
-
 [![Tests](https://github.com/arneso-ssb/timeseriestest/actions/workflows/tests.yml/badge.svg)][tests]
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=arneso-ssb_timeseriestest&metric=coverage)][sonarcov]
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=arneso-ssb_timeseriestest&metric=alert_status)][sonarquality]
@@ -13,7 +8,6 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
-[pypi status]: https://pypi.org/project/timeseriestest/
 [tests]: https://github.com/arneso-ssb/timeseriestest/actions?workflow=Tests
 [sonarcov]: https://sonarcloud.io/summary/overall?id=arneso-ssb_timeseriestest
 [sonarquality]: https://sonarcloud.io/summary/overall?id=arneso-ssb_timeseriestest
@@ -48,9 +42,9 @@ from timeseriestest import parquet_to_text
 parquet_to_text(Path("input/measurements.parquet"), Path("transfer"))
 ```
 
-This creates `transfer/data.csv` and `transfer/metadata.json`. The JSON file
-contains a readable schema and the exact serialized Arrow schema used for
-reconstruction.
+This creates `transfer/data.csv` and `transfer/metadata.json`.
+The JSON file contains a readable schema and the exact serialized Arrow schema used
+for reconstruction.
 
 Recreate the Parquet file in another directory:
 
@@ -62,11 +56,12 @@ from timeseriestest import text_to_parquet
 text_to_parquet(Path("transfer"), Path("output"))
 ```
 
-The original filename is restored. Scalar Arrow types, including numeric,
-decimal, temporal, binary, string, and dictionary/categorical types, are
-preserved. Nested types such as lists and structs are not supported by the CSV
-intermediate format. Parquet-specific physical details such as compression,
-encoding, and row-group layout are recreated with PyArrow defaults.
+The original filename is restored.
+Scalar Arrow types, including numeric, decimal, temporal, binary, string,
+and dictionary/categorical types, are preserved.
+Nested types such as lists and structs are not supported by the CSV intermediate format.
+Parquet-specific physical details such as compression, encoding,
+and row-group layout are recreated with PyArrow defaults.
 
 ## Contributing
 
@@ -80,18 +75,14 @@ _TimeseriesTest_ is free and open source software.
 
 ## Issues
 
-If you encounter any problems,
-please [file an issue] along with a detailed description.
+If you encounter any problems, please [file an issue] along with a detailed description.
 
 ## Credits
 
-This project was generated from a template adapted from Statistics Norway's [SSB PyPI Template].
+This project was generated with the [Python uv project template].
 
-[pypi]: https://pypi.org/
-[ssb pypi template]: https://github.com/statisticsnorway/ssb-pypitemplate
+[python uv project template]: https://github.com/arnesor/uv-template
 [file an issue]: https://github.com/arneso-ssb/timeseriestest/issues
-[uv]: https://github.com/astral-sh/uv
-
 <!-- github-only -->
 
 [license]: https://github.com/arneso-ssb/timeseriestest/blob/main/LICENSE

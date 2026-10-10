@@ -1,4 +1,7 @@
 categories:
+  - type: "pre-exclude"
+    when:
+      label: "skip-changelog"
   - title: ":boom: Breaking Changes"
     label: "breaking"
   - title: ":lock: Security"
@@ -24,8 +27,6 @@ categories:
   - title: ":package: Dependencies"
     labels:
       - "dependencies"
-exclude-labels:
-  - "skip-changelog"
 template: |
   ## Changes
 

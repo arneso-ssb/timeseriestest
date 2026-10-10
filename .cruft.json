@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/arnesor/uv-template.git",
-  "commit": "46beff590594883c01f441b79f4c388f342c0a95",
+  "commit": "9c12e1f67eb29990774c7e8f55a18315a8047ca1",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -13,8 +13,8 @@
       "email": "81353974+arneso-ssb@users.noreply.github.com",
       "github_organization": "arneso-ssb",
       "version": "0.0.0",
+      "script_support": "project-local",
       "license": "MIT",
-      "development_status": "Development Status :: 4 - Beta",
       "code_quality_level": "Medium",
       "_copy_without_render": [
         "*.rst_t"
@@ -24,7 +24,7 @@
         "trim_blocks": true
       },
       "_template": "https://github.com/arnesor/uv-template.git",
-      "_commit": "46beff590594883c01f441b79f4c388f342c0a95"
+      "_commit": "9c12e1f67eb29990774c7e8f55a18315a8047ca1"
     }
   },
   "directory": null
