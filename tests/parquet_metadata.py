@@ -71,7 +71,7 @@ def to_timeseries_dataframe(
     return dataset_df.rename_axis("valid_at").reset_index()
 
 
-def main():
+def main() -> None:
     print("Starting to process mikrokv data...")
 
     mikrokv_df = pd.read_parquet(OUTPUT_PATH / "randomized_data.parquet")

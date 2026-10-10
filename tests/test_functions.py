@@ -1,5 +1,6 @@
 import json
-from typing import cast
+from pathlib import Path
+from typing import Any, cast
 
 import pandas as pd
 import pyarrow as pa
@@ -77,14 +78,17 @@ def test_example_function() -> None:
     assert example_function(1, 0) == "1 is greater than or equal to 0"
 
 
-def test_parquet_text_round_trip_preserves_data_and_schema(tmp_path) -> None:
+def test_parquet_text_round_trip_preserves_data_and_schema(tmp_path: Path) -> None:
     schema = pa.schema(
-        [
-            pa.field("count", pa.int32()),
-            pa.field("when", pa.timestamp("us", tz="Europe/Oslo")),
-            pa.field("label", pa.string()),
-            pa.field("category", pa.dictionary(pa.int8(), pa.string())),
-        ],
+        cast(
+            "list[pa.Field[Any]]",
+            [
+                pa.field("count", pa.int32()),
+                pa.field("when", pa.timestamp("us", tz="Europe/Oslo")),
+                pa.field("label", pa.string()),
+                pa.field("category", pa.dictionary(pa.int8(), pa.string())),
+            ],
+        ),
         metadata={b"source": b"round-trip-test"},
     )
     table = pa.Table.from_arrays(
