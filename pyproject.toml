@@ -35,6 +35,7 @@ dev = [
     {include-group = "lint"},
     "coverage>=7.11.3",
     "deptry>=0.24.0",
+    "marimo[recommended]>=0.25.1",
     "mypy>=1.18.2",
     "pandas-stubs>=2.3.3.251219",
     "pyarrow-stubs>=20.0",
@@ -60,6 +61,9 @@ show_error_context = true
 
 [tool.deptry]
 known_first_party = ["timeseriestest"]
+
+[tool.deptry.per_rule_ignores]
+DEP004 = ["marimo"]
 
 [tool.rumdl]
 flavor = "gfm"
@@ -133,6 +137,10 @@ classmethod-decorators = ["classmethod", "validator", "root_validator", "pydanti
 
 [tool.ruff.lint.per-file-ignores]
 "*/__init__.py" = ["F401"]
+"scripts/marimo_*.py" = [
+    "ANN001",  # Marimo injects cell dependencies as untyped arguments.
+    "B018",    # A cell's final expression is its displayed output.
+]
 "**/tests/*" = [
     "ANN001",  # type annotations don't add value for test functions
     "ANN002",  # type annotations don't add value for test functions
