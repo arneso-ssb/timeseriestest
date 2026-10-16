@@ -5,6 +5,7 @@ from typing import cast
 
 import pandas as pd
 from ssb_timeseries.dataset import Dataset
+from ssb_timeseries.meta.taxonomy import Taxonomy
 from ssb_timeseries.types import TagDict
 
 
@@ -17,7 +18,7 @@ def to_timeseries_dataframe(
     value_columns: list[str],
     separator: str = ".",
 ) -> pd.DataFrame:
-    """Convert a long format dataset a to timeseries dataset.
+    """Convert a long-format DataFrame to a wide-format timeseries DataFrame.
 
     Each output series is named by joining its series-key values and source
     value-column name. The period column is converted to a ``valid_at`` timestamp
@@ -33,11 +34,11 @@ def to_timeseries_dataframe(
         separator: Text used to join the parts of each output series name. Default is `.`.
 
     Returns:
-        A timeseries DataFrame containing ``valid_at`` and one column per series.
+        A wide-format timeseries DataFrame containing a ``valid_at`` column and one
+          value column per time series.
 
     Raises:
         ValueError: If a period and series-key combination occurs more than once.
-
     """
     data = df[[period_column, *series_keys, *value_columns]].copy()
     if data.duplicated(subset=[period_column, *series_keys]).any():
@@ -59,7 +60,7 @@ def to_timeseries_dataframe(
         for column in dataset_df.columns
     ]
     assert isinstance(dataset_df.index, pd.PeriodIndex)
-    dataset_df.index = dataset_df.index.to_timestamp(frequency)
+    dataset_df.index = dataset_df.index.to_timestamp(frequency).tz_localize("UTC")
 
     # the ssb-timeseries library expects the time index to be a column named "valid_at"
     return dataset_df.rename_axis("valid_at").reset_index()
@@ -70,17 +71,16 @@ def add_metadata_mapping(
     from_col: str,
     to_cols: list[str],
     target_dataset: Dataset,
-) -> Dataset:
+) -> None:
     """Add metadata attributes to series using a source-column mapping.
+
+    This function modifies ``target_dataset`` in place.
 
     Args:
         source_df: Data containing the mapping attributes.
         from_col: Source column matching an existing series tag.
         to_cols: Source columns to add as series metadata.
         target_dataset: Dataset whose series metadata will be updated.
-
-    Returns:
-        The updated dataset. The input dataset is modified in place.
 
     Raises:
         KeyError: If a required source column or series tag is missing.
@@ -130,4 +130,44 @@ def add_metadata_mapping(
     for key, series_names in series_by_key.items():
         target_dataset.tag_series(series_names, tags=metadata_by_key[key])
 
-    return target_dataset
+
+def mapping_to_taxonomy(
+    df: pd.DataFrame, child_column: str, parent_column: str
+) -> Taxonomy:
+    """Create a taxonomy from child-parent mappings in a DataFrame.
+
+    Duplicate child-parent pairs are removed. Each child value is used as both
+    the taxonomy code and name, and a missing parent value identifies a root
+    node.
+
+    Args:
+        df: DataFrame containing the child-parent mappings.
+        child_column: Name of the column containing child codes.
+        parent_column: Name of the column containing parent codes.
+
+    Returns:
+        A taxonomy containing the distinct child-parent mappings.
+
+    Raises:
+        KeyError: If ``child_column`` or ``parent_column`` is not present in
+            ``df``.
+    """
+    mapping_df = (
+        df[[child_column, parent_column]]
+        .drop_duplicates()
+        .rename(
+            columns={
+                child_column: "code",
+                parent_column: "parentCode",
+            }
+        )
+    )
+
+    mapping_df["name"] = mapping_df["code"]
+    mapping_df["parentCode"] = mapping_df["parentCode"].fillna("")
+
+    data = cast(
+        list[dict[str, str]],
+        mapping_df[["code", "name", "parentCode"]].to_dict(orient="records"),
+    )
+    return Taxonomy(data=data)
