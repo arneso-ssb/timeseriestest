@@ -1,7 +1,7 @@
 """Utilities for working with time-series datasets."""
 
 from collections import defaultdict
-from typing import cast
+from typing import Any, cast
 
 import pandas as pd
 from ssb_timeseries.dataset import Dataset
@@ -136,9 +136,9 @@ def mapping_to_taxonomy(
 ) -> Taxonomy:
     """Create a taxonomy from child-parent mappings in a DataFrame.
 
-    Duplicate child-parent pairs are removed. Each child value is used as both
-    the taxonomy code and name, and a missing parent value identifies a root
-    node.
+    Missing, empty, or whitespace-only parent values identify root nodes.
+    Child and parent codes are converted to strings, and duplicate normalized
+    child-parent pairs are removed. Each child code is also used as its name.
 
     Args:
         df: DataFrame containing the child-parent mappings.
@@ -151,23 +151,34 @@ def mapping_to_taxonomy(
     Raises:
         KeyError: If ``child_column`` or ``parent_column`` is not present in
             ``df``.
+        ValueError: If a child code is missing.
     """
-    mapping_df = (
-        df[[child_column, parent_column]]
-        .drop_duplicates()
-        .rename(
-            columns={
-                child_column: "code",
-                parent_column: "parentCode",
-            }
-        )
+    mapping_df = df[[child_column, parent_column]].rename(
+        columns={
+            child_column: "code",
+            parent_column: "parentCode",
+        }
     )
+    if mapping_df["code"].isna().any():
+        raise ValueError("Taxonomy child codes must not be missing")
 
+    mapping_df["code"] = mapping_df["code"].map(_taxonomy_code)
+    mapping_df["parentCode"] = mapping_df["parentCode"].map(_taxonomy_parent)
     mapping_df["name"] = mapping_df["code"]
-    mapping_df["parentCode"] = mapping_df["parentCode"].fillna("")
+    mapping_df = mapping_df.drop_duplicates()
 
-    data = cast(
-        list[dict[str, str]],
-        mapping_df[["code", "name", "parentCode"]].to_dict(orient="records"),
-    )
-    return Taxonomy(data=data)
+    return Taxonomy(data=mapping_df[["code", "name", "parentCode"]])
+
+
+# Private helper functions for taxonomy code and parent normalization
+def _taxonomy_code(value: Any) -> str:
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value)
+
+
+def _taxonomy_parent(value: Any) -> str | None:
+    if pd.isna(value):
+        return None
+    code = _taxonomy_code(value)
+    return code if code.strip() else None
